@@ -45,7 +45,7 @@ void interpret(void) {
                     Case 0x01: reg[OFOO] |= reg[OOFO];
                     Case 0x02: reg[OFOO] &= reg[OOFO];
                     Case 0x03: reg[OFOO] ^= reg[OOFO];
-                    Case 0x04: reg[VF] = (reg[OFOO] + reg[OOFO]) > 255; reg[OFOO] += reg[OOFO];
+                    Case 0x04: reg[VF] = reg[OFOO] + reg[OOFO] > 255; reg[OFOO] += reg[OOFO];
                     Case 0x05: reg[VF] = reg[OFOO] >= reg[OOFO]; reg[OFOO] -= reg[OOFO];
                     Case 0x06: reg[VF] = reg[OFOO] & 1; reg[OFOO] >>= 1;
                     Case 0x07: reg[VF] = reg[OOFO] >= reg[OFOO]; reg[OFOO] = reg[OOFO] - reg[OFOO];
