@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdlib.h>
 
 uint8_t mem[4096];
 uint8_t reg[18];
@@ -32,11 +33,11 @@ void interpret(void) {
                 PC = instr & 0xFFF;
                 break;
             case 0x3000 ... 0x3FFF:
-                if (reg[(instr & 0x0F00) >> 8] == instr & 0xFF)
+                if (reg[(instr & 0x0F00) >> 8] == (instr & 0xFF))
                     PC += 2;
                 break;
             case 0x4000 ... 0x4FFF:
-                if (reg[(instr & 0x0F00) >> 8] != instr & 0xFF)
+                if (reg[(instr & 0x0F00) >> 8] != (instr & 0xFF))
                     PC += 2;
                 break;
             case 0x5000 ... 0x5FFF:
@@ -44,10 +45,10 @@ void interpret(void) {
                     PC += 2;
                 break;
             case 0x6000 ... 0x6FFF:
-                reg[(instr & 0x0F00) >> 8] == instr & 0xFF;
+                reg[(instr & 0x0F00) >> 8] = (instr & 0xFF);
                 break;
             case 0x7000 ... 0x7FFF:
-                reg[(instr & 0x0F00) >> 8] += instr & 0xFF;
+                reg[(instr & 0x0F00) >> 8] += (instr & 0xFF);
                 break;
             case 0x8000 ... 0x8FFF:
                 // todo
