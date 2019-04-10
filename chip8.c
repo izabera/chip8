@@ -24,40 +24,41 @@ static inline uint16_t getinstr(void) {
 #define OOFF (instr & 0xFF)
 #define OFOO ((instr & 0xF00) >> 8)
 #define OFFF (instr & 0x0FFF)
+#define FOOO (instr & 0xF000 >> 12)
 
 #define Case break; case
 
 void interpret(void) {
     while (1) {
         uint16_t instr = getinstr();
-        switch (instr) {
-            Case 0x00EE: PC = stack[SP--];
-            Case 0x1000 ... 0x1FFF: PC = OFFF;
-            Case 0x2000 ... 0x2FFF: stack[++SP] = PC; PC = OFFF;
-            Case 0x3000 ... 0x3FFF: if (reg[OFOO] == OOFF) PC += 2;
-            Case 0x4000 ... 0x4FFF: if (reg[OFOO] != OOFF) PC += 2;
-            Case 0x5000 ... 0x5FFF: if (reg[OFOO] == reg[OOFO]) PC += 2;
-            Case 0x6000 ... 0x6FFF: reg[OFOO] = OOFF;
-            Case 0x7000 ... 0x7FFF: reg[OFOO] += OOFF;
-            Case 0x8000 ... 0x8FFF:
+        switch (FOOO) {
+            Case 0x0: PC = stack[SP--];
+            Case 0x1: PC = OFFF;
+            Case 0x2: stack[++SP] = PC; PC = OFFF;
+            Case 0x3: if (reg[OFOO] == OOFF) PC += 2;
+            Case 0x4: if (reg[OFOO] != OOFF) PC += 2;
+            Case 0x5: if (reg[OFOO] == reg[OOFO]) PC += 2;
+            Case 0x6: reg[OFOO] = OOFF;
+            Case 0x7: reg[OFOO] += OOFF;
+            Case 0x8:
                 switch (OOOF) {
-                    Case 0x00: reg[OFOO] = reg[OOFO];
-                    Case 0x01: reg[OFOO] |= reg[OOFO];
-                    Case 0x02: reg[OFOO] &= reg[OOFO];
-                    Case 0x03: reg[OFOO] ^= reg[OOFO];
-                    Case 0x04: reg[VF] = reg[OFOO] + reg[OOFO] > 255; reg[OFOO] += reg[OOFO];
-                    Case 0x05: reg[VF] = reg[OFOO] >= reg[OOFO]; reg[OFOO] -= reg[OOFO];
-                    Case 0x06: reg[VF] = reg[OFOO] & 1; reg[OFOO] >>= 1;
-                    Case 0x07: reg[VF] = reg[OOFO] >= reg[OFOO]; reg[OFOO] = reg[OOFO] - reg[OFOO];
-                    Case 0x0E: reg[VF] = reg[OFOO] & 128; reg[OFOO] <<= 1;
+                    Case 0x0: reg[OFOO] = reg[OOFO];
+                    Case 0x1: reg[OFOO] |= reg[OOFO];
+                    Case 0x2: reg[OFOO] &= reg[OOFO];
+                    Case 0x3: reg[OFOO] ^= reg[OOFO];
+                    Case 0x4: reg[VF] = reg[OFOO] + reg[OOFO] > 255; reg[OFOO] += reg[OOFO];
+                    Case 0x5: reg[VF] = reg[OFOO] >= reg[OOFO]; reg[OFOO] -= reg[OOFO];
+                    Case 0x6: reg[VF] = reg[OFOO] & 1; reg[OFOO] >>= 1;
+                    Case 0x7: reg[VF] = reg[OOFO] >= reg[OFOO]; reg[OFOO] = reg[OOFO] - reg[OFOO];
+                    Case 0xE: reg[VF] = reg[OFOO] & 128; reg[OFOO] <<= 1;
                 }
-            Case 0x9000 ... 0x9FFF: if (reg[OFOO] != reg[OOFO]) PC += 2;
-            Case 0xA000 ... 0xAFFF: I = OFFF;
-            Case 0xB000 ... 0xBFFF: PC = OFFF + reg[V0];
-            Case 0xC000 ... 0xCFFF: reg[OFOO] = rand() & OOFF;
-            Case 0xD000 ... 0xDFFF: // todo
-            Case 0xE000 ... 0xEFFF: // todo
-            Case 0xF000 ... 0xFFFF:
+            Case 0x9: if (reg[OFOO] != reg[OOFO]) PC += 2;
+            Case 0xA: I = OFFF;
+            Case 0xB: PC = OFFF + reg[V0];
+            Case 0xC: reg[OFOO] = rand() & OOFF;
+            Case 0xD: // todo
+            Case 0xE: // todo
+            Case 0xF:
                 switch (OOFF) {
                     Case 0x07: reg[OFOO] = reg[DT];
                     Case 0x0A: // todo
